@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f4c81" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Adult UTI Tool" />
+  <meta name="description" content="Evidence-graded Adult UTI Diagnosis, Dipstick Rules & Pre-Treatment Culture Decision Support Tool mapped across SIGN 160, UKHSA DDTs, NICE NG109/110/111/113/QS90 & UK SMI B 41." />
+  <title>Adult UTI Decision Support (SIGN 160 / UKHSA / UK SMI B 41)</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
+  <link rel="apple-touch-icon" href="./icons/icon.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="title-row">
+        <div>
+          <span class="badge-pill">SIGN 160 • UKHSA • NICE • UK SMI B 41</span>
+          <h1>Adult UTI Diagnostic &amp; Culture Tool</h1>
+          <p class="subtitle">Evidence-graded dipstick gatekeeping &amp; pre-treatment culture rules (&ge;16 years)</p>
+        </div>
+        <div class="header-actions">
+          <button type="button" id="gradeKeyBtn" class="btn-ghost" aria-label="View evidence grading key">Evidence Key</button>
+          <button type="button" id="resetBtn" class="btn-ghost" aria-label="Reset inputs">Reset</button>
+        </div>
+      </div>
+
+      <nav class="cohort-bar" role="tablist" aria-label="Adult patient cohorts">
+        <button type="button" class="cohort-btn active" data-cohort="fem_u65" role="tab" aria-selected="true">Females &lt;65y</button>
+        <button type="button" class="cohort-btn" data-cohort="preg" role="tab" aria-selected="false">Pregnancy</button>
+        <button type="button" class="cohort-btn" data-cohort="male_u65" role="tab" aria-selected="false">Males &lt;65y</button>
+        <button type="button" class="cohort-btn" data-cohort="older_65" role="tab" aria-selected="false">Adults &ge;65y</button>
+        <button type="button" class="cohort-btn" data-cohort="cauti" role="tab" aria-selected="false">Catheter (CAUTI)</button>
+        <button type="button" class="cohort-btn" data-cohort="surgical" role="tab" aria-selected="false">Surgically Altered</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Dynamic Cohort Form Container -->
+    <div id="cohortContainer"></div>
+
+    <!-- Universal Resistance / Recurrence Modifier -->
+    <div class="card modifier-card">
+      <div class="card-header-row">
+        <h2>Antimicrobial Resistance &amp; Recurrence Modifier</h2>
+        <span class="rec-tag">Stewardship Check</span>
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" id="resistanceRiskCheck" />
+        <span><strong>Recurrent UTI / Resistance Risk / Treatment Failure:</strong> &ge;2 episodes in 6m or &ge;3 in 12m, persistent symptoms 48h post-therapy, prior resistant isolate, recent hospitalisation/travel, or recent antibiotic exposure.</span>
+      </label>
+    </div>
+
+    <!-- Dynamic Clinical Verdict Card -->
+    <div id="verdictCard" class="verdict-card verdict-neutral" aria-live="polite">
+      <div class="verdict-top">
+        <span id="verdictSeverity" class="verdict-pill">SELECT CLINICAL FINDINGS</span>
+        <span id="verdictCohortBadge" class="verdict-cite">Females &lt;65y</span>
+      </div>
+      <h2 id="verdictTitle">Select presenting symptoms above</h2>
+      <p id="verdictSummary" class="verdict-summary"></p>
+
+      <div class="rule-boxes">
+        <div class="rule-box">
+          <div class="rule-box-label">Dipstick / Urinalysis Rule</div>
+          <div id="verdictDipstick" class="rule-box-val"></div>
+        </div>
+        <div class="rule-box">
+          <div class="rule-box-label">Culture &amp; Lab Standard</div>
+          <div id="verdictCulture" class="rule-box-val"></div>
+        </div>
+      </div>
+
+      <ul id="verdictActions" class="action-list"></ul>
+
+      <!-- Evidence Grading & Guideline Attribution Panel -->
+      <div class="evidence-panel">
+        <div class="evidence-header">
+          <strong>Guideline Attribution &amp; Evidence Strength</strong>
+          <button type="button" id="inlineKeyLink" class="link-btn">Grading definitions &rarr;</button>
+        </div>
+        <div class="evidence-grid">
+          <div class="ev-item">
+            <span class="ev-label">Source Guideline(s):</span>
+            <span id="evSources" class="ev-val"></span>
+          </div>
+          <div class="ev-item">
+            <span class="ev-label">Dipstick Rule Strength:</span>
+            <span id="evDipGrade" class="ev-badge"></span>
+          </div>
+          <div class="ev-item">
+            <span class="ev-label">Symptom / Management Strength:</span>
+            <span id="evClinGrade" class="ev-badge"></span>
+          </div>
+        </div>
+      </div>
+
+      <div id="verdictNotePreview" class="note-preview hidden"></div>
+      <div class="verdict-footer">
+        <button type="button" id="copyNoteBtn" class="btn-primary">Copy Clinical Note</button>
+        <span id="copyFeedback" class="copy-feedback" role="status"></span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Evidence Grading Key Modal -->
+  <div id="gradeModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h2 id="modalTitle">Evidence Grading Frameworks</h2>
+        <button type="button" id="closeModalBtn" class="btn-ghost-dark" aria-label="Close modal">Close</button>
+      </div>
+      <div class="modal-body">
+        <h3>1. SIGN 160 Evidence Levels &amp; Recommendation Strengths</h3>
+        <ul class="key-list">
+          <li><strong>Level 1++ / 1+ [Strong Recommendation R]:</strong> High-quality meta-analyses, systematic reviews of RCTs, or RCTs with very low/low risk of bias ('should' be performed).</li>
+          <li><strong>Level 2++ / 2+ [Strong / Conditional R]:</strong> High-quality systematic reviews or cohort/case-control studies supporting diagnostic likelihood ratios.</li>
+          <li><strong>Level 3 / 4 &amp; Good Practice Point [&check;]:</strong> Non-analytic studies, expert consensus, or recommended best practice.</li>
+        </ul>
+
+        <h3>2. UKHSA Primary Care Tools (Oxford OCEBM Grades)</h3>
+        <ul class="key-list">
+          <li><strong>Grade A (OCEBM Level 1a/1b):</strong> Consistent Level 1 evidence; high diagnostic accuracy (e.g. 'DO NOT DIPSTICK' mandates in &ge;65y &amp; CAUTI).</li>
+          <li><strong>Grade B (OCEBM Level 2a/2b/3):</strong> Consistent cohort/case-control studies (e.g. dysuria, nocturia, cloudy urine, male LUTS, pyelonephritis).</li>
+          <li><strong>Grade C / D / E:</strong> Case series (C), physiological first principles (D), or multidisciplinary expert consensus (E, e.g. hypothermia &le;36.0&deg;C in elderly).</li>
+          <li><strong>Grade Nat / N:</strong> Covered under existing national guidance (NICE NG109 / NG110 / NG111 / NG113 / QS90).</li>
+        </ul>
+
+        <h3>3. UK SMI B 41 (Issue 8.8, Dec 2025)</h3>
+        <ul class="key-list">
+          <li><strong>National Accredited Laboratory Standard:</strong> Sets cohort-stratified colony thresholds (&ge;10<sup>2</sup> cfu/mL nephrostomy; &ge;10<sup>3</sup> cfu/mL males &amp; urostomy; &ge;10<sup>4</sup> cfu/mL symptomatic females; &ge;10<sup>5</sup> cfu/mL CAUTI &amp; pregnancy) and boric acid 10 mL fill-line rules.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>Synthesised from <strong>SIGN 160</strong> (2020), <strong>UKHSA Diagnostic Decision Tools v4.0</strong> (May 2025), <strong>NICE NG109/NG110/NG111/NG113/QS90</strong>, and <strong>UK SMI B 41</strong> (Issue 8.8, Dec 2025). Offline-capable PWA &bull; Zero patient data transmitted or stored.</p>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>
