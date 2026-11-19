@@ -1,4 +1,4 @@
-# Adult UTI Diagnostic & Culture Decision Support Tool (SIGN 160 / UKHSA / UK SMI B 41)
+# Adult UTI Diagnostic & Culture Decision Support Tool (UKHSA / NICE / SIGN 160 / UK SMI B 41)
 
 An offline-capable **Progressive Web App (PWA)** designed for mobile phones, tablets, and desktop browsers to support pre-analytical urine diagnostic stewardship in adults (`≥16` years). Every recommendation displays its source guideline(s) alongside explicit evidence-grading ratings.
 
@@ -8,20 +8,19 @@ An offline-capable **Progressive Web App (PWA)** designed for mobile phones, tab
 
 All diagnostic algorithms, dipstick gatekeeping rules, specimen collection standards, and microbiological significance thresholds are synthesised from official UK and Scottish national guidelines:
 
-1. **SIGN 160** — *Management of suspected bacterial lower urinary tract infection in adult women* (Scottish Intercollegiate Guidelines Network, September 2020; ISBN `978-1-909103-80-1`).
-   - Establishes the **'Rule of Three'** in women `<65` years (dysuria, new nocturia, cloudy urine: `≥2` symptoms = `>80%` UTI probability, bypassing dipstick testing) [Level 1++, Strong Recommendation R].
-   - Establishes non-treatment of asymptomatic bacteriuria (ASB) in non-pregnant adults, older adults, and catheterised patients [Level 1++, Strong Recommendation R], and screening/treatment of antenatal ASB in pregnancy.
-2. **UKHSA Primary Care Diagnostic Decision Tools (DDTs) v4.0** — *Diagnosis of urinary tract infections: quick reference tools* (UK Health Security Agency, May/July 2025):
-   - **Women under 65 years:** Vaginal discharge exclusion filter (`~80%` non-UTI) and single-symptom dipstick routing [Grade B, OCEBM Level 2b].
+1. **UKHSA Primary Care Diagnostic Decision Tools (DDTs) v4.0** — *Diagnosis of urinary tract infections: quick reference tools* (UK Health Security Agency, May/July 2025):
+   - **Women under 65 years:** Establishes the **'Rule of Three'** (dysuria, new nocturia, cloudy urine: `≥2` key symptoms without vaginal discharge = `>80%` UTI probability, bypassing dipstick testing) [Grade B, OCEBM Level 2b], vaginal discharge exclusion filter (`~80%` non-UTI), and single-symptom dipstick routing.
    - **Adults 65 years and over:** Strict **'DO NOT DIPSTICK'** mandate [Grade A, OCEBM Level 1a], new dysuria alone vs `≥2` localised urinary signs rule [Grade B], and mandatory **PINCH ME** delirium/deterioration screening.
    - **Catheter-Associated UTI (CAUTI):** Strict **'DO NOT DIPSTICK'** mandate [Grade A, OCEBM Level 1a], prohibition of drainage-bag sampling, and catheter replacement prior to sampling/treatment if in situ `>7` days [Grade B].
    - **Men under 65 years:** Mandatory pre-treatment MSU culture (negative dipstick cannot exclude male UTI) and acute prostatitis/STI screening [Grade B].
-3. **NICE Guidelines & Quality Standards**:
-   - **NG109** (*Urinary tract infection [lower]: antimicrobial prescribing*)
+2. **NICE Guidelines & Quality Standards**:
+   - **NG109** (*Urinary tract infection [lower]: antimicrobial prescribing* — supports UKHSA/NICE 3-key-symptom diagnostic rule and empirical management)
    - **NG110** (*Prostatitis [acute]: antimicrobial prescribing*)
    - **NG111** (*Pyelonephritis [acute]: antimicrobial prescribing*)
    - **NG113** (*Urinary tract infection [catheter-associated]: antimicrobial prescribing*)
    - **QS90** (*Urinary tract infections in adults* — Quality Statement 1: Do not use dipstick testing to diagnose UTI in adults `≥65` years)
+3. **SIGN 160** — *Management of suspected bacterial lower urinary tract infection in adult women* (Scottish Intercollegiate Guidelines Network, September 2020; ISBN `978-1-909103-80-1`):
+   - Establishes 3-day empirical treatment duration in non-pregnant women, non-treatment of asymptomatic bacteriuria (ASB) in non-pregnant adults, older adults, and catheterised patients [Level 1++, Strong Recommendation R], and screening/treatment of antenatal ASB in pregnancy.
 4. **UK Standards for Microbiology Investigations (UK SMI B 41, Issue 8.8, December 2025)** — *Investigation of urine*:
    - Cohort-stratified bacterial colony count thresholds (`≥10² cfu/mL` nephrostomy; `≥10³ cfu/mL` males & urostomies; `≥10⁴ cfu/mL` symptomatic females; `≥10⁵ cfu/mL` CAUTI & pregnancy).
    - Red-Top Boric Acid `10 mL` exact fill-line preservation rule and heavy mixed growth (`≥3` species) suppression rules.
@@ -32,7 +31,7 @@ All diagnostic algorithms, dipstick gatekeeping rules, specimen collection stand
 
 - **Formulary-Neutral Prescribing Prompts:** All specific drug names are intentionally omitted in favour of **"Follow local empirical policy"** (while retaining evidence-based course durations), allowing seamless use across NHS Boards without regional formulary conflicts.
 - **Resistance & Recurrence Modifier:** Ticking **Recurrent UTI / Resistance Risk / Treatment Failure** dynamically updates management advice and generated clinical notes to instruct: *"Follow local empirical policy — base antimicrobial choice on most resistant recent isolate."*
-- **Transparent Evidence Grading:** Every output displays separate evidence ratings for both the **Dipstick/Urinalysis Rule** and the **Symptom/Management Rule**, accompanied by an in-app **Evidence Key** modal explaining SIGN, Oxford OCEBM, NICE, and UK SMI B 41 ratings.
+- **Transparent Evidence Grading:** Every output displays separate evidence ratings for both the **Dipstick/Urinalysis Rule** and the **Symptom/Management Rule**, accompanied by an in-app **Evidence Key** modal explaining Oxford OCEBM, NICE, SIGN, and UK SMI B 41 ratings.
 
 ---
 
