@@ -13,7 +13,6 @@
   const state = {
     cohort: "fem_u65",
     resistanceRisk: false,
-    // Females <65
     femDischarge: false,
     femUpper: false,
     femDysuria: false,
@@ -22,26 +21,21 @@
     femOther: false,
     femLe: "neg",
     femNitrite: "neg",
-    // Pregnancy
     pregMode: "symp_lower",
-    // Males <65
     maleSti: false,
     maleProstatitis: false,
     maleUpper: false,
     maleLower: false,
     maleLe: "neg",
     maleNitrite: "neg",
-    // Older adults >=65
     oldUpper: false,
     oldDysuria: false,
     oldLocalCount: [],
     oldDeliriumOnly: false,
     oldDarkSmellyOnly: false,
-    // CAUTI
     cautiUpper: false,
     cautiLocal: false,
     cautiOver7d: true,
-    // Surgically altered
     surgType: "conduit",
     surgSymp: false
   };
@@ -234,7 +228,7 @@
 
           <div class="section-divider">
             <h3>Other Localised Urinary Signs (${state.oldLocalCount.length} selected — &ge;2 required if no dysuria)</h3>
-            ${localItems.map((item, idx) => `
+            ${localItems.map((item) => `
               <label class="checkbox-row">
                 <input type="checkbox" class="old-local-cb" value="${item}" ${state.oldLocalCount.includes(item) ? "checked" : ""} />
                 <span>${item}</span>
@@ -834,15 +828,13 @@
       `• Dipstick Rule: ${dipRule}`,
       `• Culture Rule: ${cultureRule}`,
       actions.length ? `• Plan: ${actions.join(" ")}` : ""
-    ].filter(Boolean).join("
-");
+    ].filter(Boolean).join("\n");
 
     els.verdictNotePreview.textContent = noteLines;
     els.verdictNotePreview.classList.remove("hidden");
     els.copyFeedback.textContent = "";
   }
 
-  // Cohort tab switching
   document.querySelectorAll(".cohort-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       state.cohort = btn.dataset.cohort;
@@ -856,13 +848,11 @@
     });
   });
 
-  // Global resistance checkbox
   els.resistanceRiskCheck.addEventListener("change", (e) => {
     state.resistanceRisk = e.target.checked;
     evaluate();
   });
 
-  // Modal controls
   const openModal = () => els.gradeModal.classList.remove("hidden");
   const closeModal = () => els.gradeModal.classList.add("hidden");
   els.gradeKeyBtn.addEventListener("click", openModal);
@@ -872,7 +862,6 @@
     if (e.target === els.gradeModal) closeModal();
   });
 
-  // Copy clinical note
   els.copyNoteBtn.addEventListener("click", async () => {
     const text = els.verdictNotePreview.textContent;
     if (!text) return;
@@ -890,7 +879,6 @@
     }
   });
 
-  // Reset
   els.resetBtn.addEventListener("click", () => {
     state.resistanceRisk = false;
     state.femDischarge = false;
@@ -924,7 +912,6 @@
     evaluate();
   });
 
-  // Service worker registration
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("./sw.js").catch(() => {});

@@ -1,4 +1,4 @@
-const CACHE_NAME = "adult-uti-tool-v1";
+const CACHE_NAME = "adult-uti-tool-v2";
 const ASSETS = [
   "./",
   "./index.html",

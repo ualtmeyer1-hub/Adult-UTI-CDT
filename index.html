@@ -19,7 +19,7 @@
     <div class="header-inner">
       <div class="title-row">
         <div>
-          <span class="badge-pill">SIGN 160 • UKHSA • NICE • UK SMI B 41</span>
+          <span class="badge-pill">SIGN 160 &bull; UKHSA &bull; NICE &bull; UK SMI B 41</span>
           <h1>Adult UTI Diagnostic &amp; Culture Tool</h1>
           <p class="subtitle">Evidence-graded dipstick gatekeeping &amp; pre-treatment culture rules (&ge;16 years)</p>
         </div>
@@ -41,8 +41,43 @@
   </header>
 
   <main class="container">
-    <!-- Dynamic Cohort Form Container -->
-    <div id="cohortContainer"></div>
+    <!-- Dynamic Cohort Form Container (pre-populated fallback included) -->
+    <div id="cohortContainer">
+      <div class="card">
+        <div class="card-header-row">
+          <h2>Females &lt;65 Years: Symptom &amp; Exclusion Triage</h2>
+          <span class="rec-tag">SIGN 160 'Rule of Three'</span>
+        </div>
+        <h3>1. Red Flags &amp; Key Exclusions</h3>
+        <label class="checkbox-row">
+          <input type="checkbox" id="femUpper" />
+          <span><strong>Upper UTI / Pyelonephritis signs:</strong> Loin/flank pain or CVA tenderness WITH fever &ge;37.9&deg;C or rigors.</span>
+        </label>
+        <label class="checkbox-row">
+          <input type="checkbox" id="femDischarge" />
+          <span><strong>New vaginal discharge or vulvovaginal irritation / thrush:</strong> (~80% do NOT have a UTI).</span>
+        </label>
+        <div class="section-divider">
+          <h3>2. SIGN 160 Three Key Diagnostic Symptoms (0/3 selected)</h3>
+          <label class="checkbox-row">
+            <input type="checkbox" id="femDysuria" />
+            <span>New-onset <strong>dysuria</strong> (pain/burning passing urine)</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="femNocturia" />
+            <span>New-onset <strong>nocturia</strong> (waking at night to pass urine)</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="femCloudy" />
+            <span><strong>Cloudy urine</strong> visible to the naked eye</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="femOther" />
+            <span>Other urinary symptoms only (new urgency, frequency, suprapubic tenderness, or visible haematuria)</span>
+          </label>
+        </div>
+      </div>
+    </div>
 
     <!-- Universal Resistance / Recurrence Modifier -->
     <div class="card modifier-card">
@@ -60,19 +95,19 @@
     <div id="verdictCard" class="verdict-card verdict-neutral" aria-live="polite">
       <div class="verdict-top">
         <span id="verdictSeverity" class="verdict-pill">SELECT CLINICAL FINDINGS</span>
-        <span id="verdictCohortBadge" class="verdict-cite">Females &lt;65y</span>
+        <span id="verdictCohortBadge" class="verdict-cite">Females &lt;65y (Non-Pregnant)</span>
       </div>
-      <h2 id="verdictTitle">Select presenting symptoms above</h2>
-      <p id="verdictSummary" class="verdict-summary"></p>
+      <h2 id="verdictTitle">Tick the patient's presenting symptoms above</h2>
+      <p id="verdictSummary" class="verdict-summary">Evaluate exclusions first, then select SIGN 160 key symptoms.</p>
 
       <div class="rule-boxes">
         <div class="rule-box">
           <div class="rule-box-label">Dipstick / Urinalysis Rule</div>
-          <div id="verdictDipstick" class="rule-box-val"></div>
+          <div id="verdictDipstick" class="rule-box-val">Dipstick only if 1 key symptom (or non-cardinal symptoms) without vaginal discharge.</div>
         </div>
         <div class="rule-box">
           <div class="rule-box-label">Culture &amp; Lab Standard</div>
-          <div id="verdictCulture" class="rule-box-val"></div>
+          <div id="verdictCulture" class="rule-box-val">Culture reserved for upper UTI, pregnancy, recurrence, or resistance risk.</div>
         </div>
       </div>
 
@@ -87,15 +122,15 @@
         <div class="evidence-grid">
           <div class="ev-item">
             <span class="ev-label">Source Guideline(s):</span>
-            <span id="evSources" class="ev-val"></span>
+            <span id="evSources" class="ev-val">SIGN 160 &bull; UKHSA DDT Women &lt;65 v4.0 &bull; NICE NG109</span>
           </div>
           <div class="ev-item">
             <span class="ev-label">Dipstick Rule Strength:</span>
-            <span id="evDipGrade" class="ev-badge"></span>
+            <span id="evDipGrade" class="ev-badge">SIGN Level 1++ / UKHSA Grade B</span>
           </div>
           <div class="ev-item">
             <span class="ev-label">Symptom / Management Strength:</span>
-            <span id="evClinGrade" class="ev-badge"></span>
+            <span id="evClinGrade" class="ev-badge">SIGN Level 1++ / UKHSA Grade B</span>
           </div>
         </div>
       </div>
