@@ -82,7 +82,7 @@
         <div class="card">
           <div class="card-header-row">
             <h2>Females &lt;65 Years: Symptom &amp; Exclusion Triage</h2>
-            <span class="rec-tag">SIGN 160 'Rule of Three'</span>
+            <span class="rec-tag">UKHSA / NICE 'Rule of Three'</span>
           </div>
           <h3>1. Red Flags &amp; Key Exclusions</h3>
           <label class="checkbox-row">
@@ -95,7 +95,7 @@
           </label>
 
           <div class="section-divider">
-            <h3>2. SIGN 160 Three Key Diagnostic Symptoms (${keyCount}/3 selected)</h3>
+            <h3>2. UKHSA / NICE Three Key Diagnostic Symptoms (${keyCount}/3 selected)</h3>
             <label class="checkbox-row">
               <input type="checkbox" id="femDysuria" ${state.femDysuria ? "checked" : ""} />
               <span>New-onset <strong>dysuria</strong> (pain/burning passing urine)</span>
@@ -393,9 +393,9 @@
             rxInstruction("7–10 day upper UTI regimen"),
             "Assess for sepsis (NEWS2) and admit to hospital if systemically unstable or unable to tolerate oral therapy."
           ],
-          sources: "SIGN 160 (2020) • UKHSA DDT Women <65 v4.0 • NICE NG111 • UK SMI B 41",
-          dipGrade: "SIGN Level 1+ [Strong R] / UKHSA Grade B",
-          clinGrade: "SIGN Level 1+ [Strong R] / NICE NG111 [Grade Nat]"
+          sources: "UKHSA DDT Women <65 v4.0 • NICE NG111 • SIGN 160 • UK SMI B 41",
+          dipGrade: "UKHSA Grade B (OCEBM Level 2a) / SIGN Level 1+",
+          clinGrade: "NICE NG111 [Grade Nat] / SIGN Level 1+ [Strong R]"
         });
       }
       if (state.femDischarge) {
@@ -410,9 +410,9 @@
             "Route to STI screening (Chlamydia/Gonorrhoea) or gynaecological/thrush assessment.",
             "Advise hydration and symptomatic relief while awaiting alternative diagnosis."
           ],
-          sources: "SIGN 160 • UKHSA DDT Women <65 v4.0",
+          sources: "UKHSA DDT Women <65 v4.0 • NICE NG109 • SIGN 160",
           dipGrade: "UKHSA Grade B (OCEBM Level 2b)",
-          clinGrade: "SIGN Level 2++ [Strong R] / UKHSA Grade B"
+          clinGrade: "UKHSA Grade B / SIGN Level 2++ [Strong R]"
         });
       }
       if (keyCount >= 2) {
@@ -420,7 +420,7 @@
           theme: "verdict-red",
           severity: "RULE OF THREE (≥2 KEY SYMPTOMS) • NO DIPSTICK",
           title: `${keyCount}/3 Key Symptoms present (>80% UTI probability): Bypass dipstick & treat`,
-          summary: "Under SIGN 160, ≥2 key symptoms (dysuria, new nocturia, cloudy urine) without vaginal discharge establishes >80% UTI likelihood.",
+          summary: "Under UKHSA / NICE guidance, ≥2 key symptoms (dysuria, new nocturia, cloudy urine) without vaginal discharge establishes >80% UTI likelihood.",
           dipRule: "DIPSTICK NOT REQUIRED — adds no diagnostic value and delays care.",
           cultureRule: state.resistanceRisk
             ? "MANDATORY pre-treatment MSU culture due to resistance/recurrence risk (UK SMI B 41: ≥10⁴ cfu/mL)."
@@ -429,9 +429,9 @@
             rxInstruction("3-day lower UTI course"),
             state.resistanceRisk ? "Collect MSU in Red-Top Boric Acid tube (fill to 10 mL line) BEFORE starting antibiotics." : "Provide TARGET UTI leaflet and safety-netting if symptoms worsen or fail to improve within 48h."
           ],
-          sources: "SIGN 160 ('Rule of Three') • UKHSA DDT Women <65 v4.0 • NICE NG109",
-          dipGrade: "SIGN Level 1++ [Strong R] / UKHSA Grade B",
-          clinGrade: "SIGN Level 1++ [Strong R] / NICE NG109 [Grade Nat]"
+          sources: "UKHSA DDT Women <65 v4.0 ('Rule of Three') • NICE NG109 • SIGN 160",
+          dipGrade: "UKHSA Grade B (OCEBM Level 2b) / NICE NG109",
+          clinGrade: "UKHSA Grade B / NICE NG109 [Grade Nat] / SIGN 160 (3d rx)"
         });
       }
       if (keyCount === 1) {
@@ -453,9 +453,9 @@
               rxInstruction("3-day lower UTI course"),
               state.resistanceRisk ? "Send pre-treatment MSU culture in Red-Top Boric Acid tube (10 mL)." : "Advise hydration and review if no improvement at 48 hours."
             ],
-            sources: "SIGN 160 • UKHSA DDT Women <65 v4.0 • NICE NG109",
-            dipGrade: "SIGN Level 2++ [Strong R] / UKHSA Grade B",
-            clinGrade: "SIGN Level 1++ [Strong R] / NICE NG109 [Grade Nat]"
+            sources: "UKHSA DDT Women <65 v4.0 • NICE NG109 • SIGN 160",
+            dipGrade: "UKHSA Grade B (OCEBM Level 2b) / SIGN Level 2++",
+            clinGrade: "NICE NG109 [Grade Nat] / SIGN Level 1++ [Strong R]"
           });
         }
         return renderVerdict({
@@ -471,9 +471,9 @@
             "Do NOT prescribe immediate empirical antibiotics.",
             "Advise hydration, analgesia/NSAID trial if appropriate (SIGN 160), and safety-net to return if symptoms worsen."
           ],
-          sources: "SIGN 160 • UKHSA DDT Women <65 v4.0",
-          dipGrade: "SIGN Level 2++ [Strong R] / UKHSA Grade B",
-          clinGrade: "SIGN Level 1+ [Conditional R] / UKHSA Grade B"
+          sources: "UKHSA DDT Women <65 v4.0 • NICE NG109 • SIGN 160",
+          dipGrade: "UKHSA Grade B (OCEBM Level 2b) / SIGN Level 2++",
+          clinGrade: "UKHSA Grade B / SIGN Level 1+ [Conditional R]"
         });
       }
       if (state.femOther) {
@@ -488,22 +488,22 @@
             "Exclude vaginal discharge, STI/urethritis, and genitourinary syndrome of menopause.",
             "If dipstick positive and UTI clinically likely: " + rxInstruction("3-day lower UTI course")
           ],
-          sources: "SIGN 160 • UKHSA DDT Women <65 v4.0",
+          sources: "UKHSA DDT Women <65 v4.0 • NICE NG109 • SIGN 160",
           dipGrade: "UKHSA Grade C (OCEBM Level 4)",
-          clinGrade: "SIGN Good Practice Point [✓] / UKHSA Grade C"
+          clinGrade: "UKHSA Grade C / SIGN Good Practice Point [✓]"
         });
       }
       return renderVerdict({
         theme: "verdict-neutral",
         severity: "SELECT SYMPTOMS ABOVE",
         title: "Tick the patient's presenting symptoms above",
-        summary: "Evaluate exclusions first, then select SIGN 160 key symptoms.",
+        summary: "Evaluate exclusions first, then select UKHSA / NICE key symptoms.",
         dipRule: "Dipstick only if 1 key symptom (or non-cardinal symptoms) without vaginal discharge.",
         cultureRule: "Culture reserved for upper UTI, pregnancy, recurrence, or resistance risk.",
         actions: [],
-        sources: "SIGN 160 • UKHSA DDT Women <65 v4.0 • NICE NG109",
-        dipGrade: "SIGN Level 1++ / UKHSA Grade B",
-        clinGrade: "SIGN Level 1++ / UKHSA Grade B"
+        sources: "UKHSA DDT Women <65 v4.0 • NICE NG109 • SIGN 160",
+        dipGrade: "UKHSA Grade B / NICE NG109",
+        clinGrade: "UKHSA Grade B / NICE NG109"
       });
     }
 

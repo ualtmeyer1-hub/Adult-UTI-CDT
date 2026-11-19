@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Adult UTI Tool" />
-  <meta name="description" content="Evidence-graded Adult UTI Diagnosis, Dipstick Rules & Pre-Treatment Culture Decision Support Tool mapped across SIGN 160, UKHSA DDTs, NICE NG109/110/111/113/QS90 & UK SMI B 41." />
-  <title>Adult UTI Decision Support (SIGN 160 / UKHSA / UK SMI B 41)</title>
+  <meta name="description" content="Evidence-graded Adult UTI Diagnosis, Dipstick Rules & Pre-Treatment Culture Decision Support Tool mapped across UKHSA DDTs, NICE NG109/110/111/113/QS90, SIGN 160 & UK SMI B 41." />
+  <title>Adult UTI Decision Support (UKHSA / NICE / SIGN 160 / UK SMI B 41)</title>
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
   <link rel="apple-touch-icon" href="./icons/icon.svg" />
@@ -19,7 +19,7 @@
     <div class="header-inner">
       <div class="title-row">
         <div>
-          <span class="badge-pill">SIGN 160 &bull; UKHSA &bull; NICE &bull; UK SMI B 41</span>
+          <span class="badge-pill">UKHSA &bull; NICE &bull; SIGN 160 &bull; UK SMI B 41</span>
           <h1>Adult UTI Diagnostic &amp; Culture Tool</h1>
           <p class="subtitle">Evidence-graded dipstick gatekeeping &amp; pre-treatment culture rules (&ge;16 years)</p>
         </div>
@@ -46,7 +46,7 @@
       <div class="card">
         <div class="card-header-row">
           <h2>Females &lt;65 Years: Symptom &amp; Exclusion Triage</h2>
-          <span class="rec-tag">SIGN 160 'Rule of Three'</span>
+          <span class="rec-tag">UKHSA / NICE 'Rule of Three'</span>
         </div>
         <h3>1. Red Flags &amp; Key Exclusions</h3>
         <label class="checkbox-row">
@@ -58,7 +58,7 @@
           <span><strong>New vaginal discharge or vulvovaginal irritation / thrush:</strong> (~80% do NOT have a UTI).</span>
         </label>
         <div class="section-divider">
-          <h3>2. SIGN 160 Three Key Diagnostic Symptoms (0/3 selected)</h3>
+          <h3>2. UKHSA / NICE Three Key Diagnostic Symptoms (0/3 selected)</h3>
           <label class="checkbox-row">
             <input type="checkbox" id="femDysuria" />
             <span>New-onset <strong>dysuria</strong> (pain/burning passing urine)</span>
@@ -98,7 +98,7 @@
         <span id="verdictCohortBadge" class="verdict-cite">Females &lt;65y (Non-Pregnant)</span>
       </div>
       <h2 id="verdictTitle">Tick the patient's presenting symptoms above</h2>
-      <p id="verdictSummary" class="verdict-summary">Evaluate exclusions first, then select SIGN 160 key symptoms.</p>
+      <p id="verdictSummary" class="verdict-summary">Evaluate exclusions first, then select UKHSA / NICE key symptoms.</p>
 
       <div class="rule-boxes">
         <div class="rule-box">
@@ -122,15 +122,15 @@
         <div class="evidence-grid">
           <div class="ev-item">
             <span class="ev-label">Source Guideline(s):</span>
-            <span id="evSources" class="ev-val">SIGN 160 &bull; UKHSA DDT Women &lt;65 v4.0 &bull; NICE NG109</span>
+            <span id="evSources" class="ev-val">UKHSA DDT Women &lt;65 v4.0 &bull; NICE NG109 &bull; SIGN 160</span>
           </div>
           <div class="ev-item">
             <span class="ev-label">Dipstick Rule Strength:</span>
-            <span id="evDipGrade" class="ev-badge">SIGN Level 1++ / UKHSA Grade B</span>
+            <span id="evDipGrade" class="ev-badge">UKHSA Grade B (OCEBM Level 2b) / NICE NG109</span>
           </div>
           <div class="ev-item">
             <span class="ev-label">Symptom / Management Strength:</span>
-            <span id="evClinGrade" class="ev-badge">SIGN Level 1++ / UKHSA Grade B</span>
+            <span id="evClinGrade" class="ev-badge">UKHSA Grade B (OCEBM Level 2b) / NICE NG109</span>
           </div>
         </div>
       </div>
@@ -151,19 +151,19 @@
         <button type="button" id="closeModalBtn" class="btn-ghost-dark" aria-label="Close modal">Close</button>
       </div>
       <div class="modal-body">
-        <h3>1. SIGN 160 Evidence Levels &amp; Recommendation Strengths</h3>
-        <ul class="key-list">
-          <li><strong>Level 1++ / 1+ [Strong Recommendation R]:</strong> High-quality meta-analyses, systematic reviews of RCTs, or RCTs with very low/low risk of bias ('should' be performed).</li>
-          <li><strong>Level 2++ / 2+ [Strong / Conditional R]:</strong> High-quality systematic reviews or cohort/case-control studies supporting diagnostic likelihood ratios.</li>
-          <li><strong>Level 3 / 4 &amp; Good Practice Point [&check;]:</strong> Non-analytic studies, expert consensus, or recommended best practice.</li>
-        </ul>
-
-        <h3>2. UKHSA Primary Care Tools (Oxford OCEBM Grades)</h3>
+        <h3>1. UKHSA Primary Care Tools (Oxford OCEBM Grades)</h3>
         <ul class="key-list">
           <li><strong>Grade A (OCEBM Level 1a/1b):</strong> Consistent Level 1 evidence; high diagnostic accuracy (e.g. 'DO NOT DIPSTICK' mandates in &ge;65y &amp; CAUTI).</li>
-          <li><strong>Grade B (OCEBM Level 2a/2b/3):</strong> Consistent cohort/case-control studies (e.g. dysuria, nocturia, cloudy urine, male LUTS, pyelonephritis).</li>
+          <li><strong>Grade B (OCEBM Level 2a/2b/3):</strong> Consistent cohort/case-control studies (e.g. UKHSA/NICE 'Rule of Three' — dysuria, nocturia, cloudy urine; male LUTS; pyelonephritis).</li>
           <li><strong>Grade C / D / E:</strong> Case series (C), physiological first principles (D), or multidisciplinary expert consensus (E, e.g. hypothermia &le;36.0&deg;C in elderly).</li>
           <li><strong>Grade Nat / N:</strong> Covered under existing national guidance (NICE NG109 / NG110 / NG111 / NG113 / QS90).</li>
+        </ul>
+
+        <h3>2. SIGN 160 Evidence Levels &amp; Recommendation Strengths</h3>
+        <ul class="key-list">
+          <li><strong>Level 1++ / 1+ [Strong Recommendation R]:</strong> High-quality meta-analyses, systematic reviews of RCTs, or RCTs with very low/low risk of bias ('should' be performed — e.g. 3-day treatment duration, non-treatment of ASB in non-pregnant women).</li>
+          <li><strong>Level 2++ / 2+ [Strong / Conditional R]:</strong> High-quality systematic reviews or cohort/case-control studies supporting diagnostic likelihood ratios.</li>
+          <li><strong>Level 3 / 4 &amp; Good Practice Point [&check;]:</strong> Non-analytic studies, expert consensus, or recommended best practice.</li>
         </ul>
 
         <h3>3. UK SMI B 41 (Issue 8.8, Dec 2025)</h3>
@@ -175,7 +175,7 @@
   </div>
 
   <footer class="app-footer">
-    <p>Synthesised from <strong>SIGN 160</strong> (2020), <strong>UKHSA Diagnostic Decision Tools v4.0</strong> (May 2025), <strong>NICE NG109/NG110/NG111/NG113/QS90</strong>, and <strong>UK SMI B 41</strong> (Issue 8.8, Dec 2025). Offline-capable PWA &bull; Zero patient data transmitted or stored.</p>
+    <p>Synthesised from <strong>UKHSA Diagnostic Decision Tools v4.0</strong> (May 2025), <strong>NICE NG109/NG110/NG111/NG113/QS90</strong>, <strong>SIGN 160</strong> (2020), and <strong>UK SMI B 41</strong> (Issue 8.8, Dec 2025). Offline-capable PWA &bull; Zero patient data transmitted or stored.</p>
   </footer>
 
   <script src="./app.js"></script>
