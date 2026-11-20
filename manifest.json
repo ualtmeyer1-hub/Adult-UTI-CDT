@@ -1,7 +1,7 @@
 {
-  "name": "Adult UTI Diagnostic & Culture Tool (SIGN 160 / UKHSA / UK SMI B 41)",
+  "name": "Adult UTI Diagnostic & Culture Tool (UKHSA / NICE / SIGN 160 / UK SMI B 41)",
   "short_name": "Adult UTI Tool",
-  "description": "Offline-capable diagnostic stewardship decision support tool for adult UTI dipstick gatekeeping and pre-treatment culture rules mapped across SIGN 160, UKHSA DDTs, NICE guidelines, and UK SMI B 41.",
+  "description": "Offline-capable diagnostic stewardship decision support tool for adult UTI dipstick gatekeeping and pre-treatment culture rules mapped across UKHSA DDTs, NICE guidelines, SIGN 160, and UK SMI B 41.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

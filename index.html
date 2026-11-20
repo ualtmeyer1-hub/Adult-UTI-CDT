@@ -138,6 +138,7 @@
       <div id="verdictNotePreview" class="note-preview hidden"></div>
       <div class="verdict-footer">
         <button type="button" id="copyNoteBtn" class="btn-primary">Copy Clinical Note</button>
+        <button type="button" id="shareFamilyBtn" class="btn-secondary hidden">Share Family &amp; Carer Guide (QR)</button>
         <span id="copyFeedback" class="copy-feedback" role="status"></span>
       </div>
     </div>
@@ -170,6 +171,27 @@
         <ul class="key-list">
           <li><strong>National Accredited Laboratory Standard:</strong> Sets cohort-stratified colony thresholds (&ge;10<sup>2</sup> cfu/mL nephrostomy; &ge;10<sup>3</sup> cfu/mL males &amp; urostomy; &ge;10<sup>4</sup> cfu/mL symptomatic females; &ge;10<sup>5</sup> cfu/mL CAUTI &amp; pregnancy) and boric acid 10 mL fill-line rules.</li>
         </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Patient & Family QR Share Modal -->
+  <div id="qrModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
+    <div class="modal-sheet qr-sheet">
+      <div class="modal-header">
+        <h2 id="qrModalTitle">Patient &amp; Family Guide (QR Code)</h2>
+        <button type="button" id="closeQrModalBtn" class="btn-ghost-dark" aria-label="Close QR modal">Close</button>
+      </div>
+      <div class="modal-body" style="text-align:center;">
+        <p style="font-size:0.86rem;color:#334155;margin-top:0;">Ask the patient or relative to scan this QR code with their phone camera to read why a dipstick, culture, or antibiotic is not needed (e.g. isolated confusion, falls, or dark/smelly urine).</p>
+        <div id="qrCodeContainer" class="qr-box" aria-label="QR code linking to patient and family guide"></div>
+        <div id="qrUrlDisplay" class="qr-url-text"></div>
+        <div class="qr-actions">
+          <button type="button" id="nativeShareBtn" class="btn-primary">Share / Send Link</button>
+          <a href="./patient-guide.html" target="_blank" rel="noopener" class="btn-secondary-link">Open Leaflet on Screen</a>
+        </div>
+        <div id="qrShareFeedback" class="copy-feedback" style="margin-top:0.5rem;"></div>
       </div>
     </div>
   </div>

@@ -31,6 +31,7 @@ All diagnostic algorithms, dipstick gatekeeping rules, specimen collection stand
 
 - **Formulary-Neutral Prescribing Prompts:** All specific drug names are intentionally omitted in favour of **"Follow local empirical policy"** (while retaining evidence-based course durations), allowing seamless use across NHS Boards without regional formulary conflicts.
 - **Resistance & Recurrence Modifier:** Ticking **Recurrent UTI / Resistance Risk / Treatment Failure** dynamically updates management advice and generated clinical notes to instruct: *"Follow local empirical policy — base antimicrobial choice on most resistant recent isolate."*
+- **Patient & Family QR Guide (`Adults ≥65y`):** Includes an embedded, mobile-friendly leaflet (`patient-guide.html`) explaining why isolated confusion, falls, or dark/smelly urine do not automatically indicate a UTI or require antibiotics, accessible via an instant offline-generated QR code or mobile share sheet.
 - **Transparent Evidence Grading:** Every output displays separate evidence ratings for both the **Dipstick/Urinalysis Rule** and the **Symptom/Management Rule**, accompanied by an in-app **Evidence Key** modal explaining Oxford OCEBM, NICE, SIGN, and UK SMI B 41 ratings.
 
 ---

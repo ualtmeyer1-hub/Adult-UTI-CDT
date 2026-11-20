@@ -526,3 +526,62 @@ h3 {
 .hidden {
   display: none !important;
 }
+
+.verdict-footer {
+  flex-wrap: wrap;
+}
+
+.btn-secondary, .btn-secondary-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  color: var(--navy-dark);
+  border: 1.5px solid var(--navy);
+  border-radius: 8px;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-secondary:active, .btn-secondary-link:active {
+  background: var(--blue-bg);
+}
+
+.qr-sheet {
+  max-width: 440px;
+}
+
+.qr-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 2px solid var(--slate-200);
+  border-radius: 12px;
+  padding: 0.85rem;
+  margin: 0.5rem auto;
+}
+
+.qr-box svg {
+  width: 210px;
+  height: 210px;
+  display: block;
+}
+
+.qr-url-text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  color: var(--slate-500);
+  word-break: break-all;
+  margin: 0.4rem 0 0.85rem;
+}
+
+.qr-actions {
+  display: flex;
+  gap: 0.55rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}

@@ -377,6 +377,10 @@
   function evaluate() {
     const c = state.cohort;
     els.verdictCohortBadge.textContent = COHORT_LABELS[c];
+    const shareBtn = document.getElementById("shareFamilyBtn");
+    if (shareBtn) {
+      shareBtn.classList.toggle("hidden", c !== "older_65");
+    }
 
     if (c === "fem_u65") {
       const keyCount = [state.femDysuria, state.femNocturia, state.femCloudy].filter(Boolean).length;
@@ -920,4 +924,292 @@
 
   renderCohortInputs();
   evaluate();
+
+  // --- Zero-Dependency Client-Side QR Code SVG Generator (ISO/IEC 18004 Byte Mode, ECC-L) ---
+  const QR = (function () {
+    const EXP = new Array(256);
+    const LOG = new Array(256);
+    let x = 1;
+    for (let i = 0; i < 255; i++) {
+      EXP[i] = x;
+      LOG[x] = i;
+      x = (x << 1) ^ (x & 128 ? 0x11d : 0);
+    }
+    for (let i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+
+    function gfMul(a, b) {
+      return a === 0 || b === 0 ? 0 : EXP[LOG[a] + LOG[b]];
+    }
+
+    function polyMul(p, q) {
+      const r = new Array(p.length + q.length - 1).fill(0);
+      for (let i = 0; i < p.length; i++) {
+        for (let j = 0; j < q.length; j++) {
+          r[i + j] ^= gfMul(p[i], q[j]);
+        }
+      }
+      return r;
+    }
+
+    function rsGenPoly(deg) {
+      let g = [1];
+      for (let i = 0; i < deg; i++) g = polyMul(g, [1, EXP[i]]);
+      return g;
+    }
+
+    function rsRemainder(data, ecLen) {
+      const gen = rsGenPoly(ecLen);
+      const res = data.slice().concat(new Array(ecLen).fill(0));
+      for (let i = 0; i < data.length; i++) {
+        const coef = res[i];
+        if (coef !== 0) {
+          for (let j = 0; j < gen.length; j++) {
+            res[i + j] ^= gfMul(gen[j], coef);
+          }
+        }
+      }
+      return res.slice(data.length);
+    }
+
+    // Version capacities for ECC-L (total codewords, ec codewords per block, blocks, alignment centers)
+    const VERSIONS = [
+      null,
+      { total: 26, data: 19, ec: 7, blocks: 1, align: [] },
+      { total: 44, data: 34, ec: 10, blocks: 1, align: [6, 18] },
+      { total: 70, data: 55, ec: 15, blocks: 1, align: [6, 22] },
+      { total: 100, data: 80, ec: 20, blocks: 1, align: [6, 26] },
+      { total: 134, data: 108, ec: 26, blocks: 1, align: [6, 30] },
+      { total: 172, data: 136, ec: 18, blocks: 2, align: [6, 34] },
+      { total: 196, data: 156, ec: 20, blocks: 2, align: [6, 22, 38] },
+      { total: 242, data: 194, ec: 24, blocks: 2, align: [6, 24, 42] },
+      { total: 292, data: 232, ec: 30, blocks: 2, align: [6, 26, 46] },
+      { total: 346, data: 274, ec: 18, blocks: 4, align: [6, 28, 50] }
+    ];
+
+    function encodeSVG(text) {
+      const bytes = Array.from(new TextEncoder().encode(text));
+      let ver = 1;
+      while (ver <= 10) {
+        const ccBits = ver < 10 ? 8 : 16;
+        const capBytes = Math.floor((VERSIONS[ver].data * 8 - 4 - ccBits) / 8);
+        if (bytes.length <= capBytes) break;
+        ver++;
+      }
+      if (ver > 10) ver = 10;
+      const spec = VERSIONS[ver];
+      const size = ver * 4 + 17;
+
+      // Build bit stream
+      const bits = [];
+      const pushBits = (val, len) => {
+        for (let i = len - 1; i >= 0; i--) bits.push((val >>> i) & 1);
+      };
+      pushBits(0b0100, 4); // Byte mode
+      pushBits(bytes.length, ver < 10 ? 8 : 16);
+      bytes.forEach((b) => pushBits(b, 8));
+      const maxBits = spec.data * 8;
+      pushBits(0, Math.min(4, maxBits - bits.length));
+      while (bits.length % 8 !== 0) bits.push(0);
+      const pads = [0xec, 0x11];
+      let pIdx = 0;
+      while (bits.length < maxBits) {
+        pushBits(pads[pIdx % 2], 8);
+        pIdx++;
+      }
+
+      const dataCw = [];
+      for (let i = 0; i < bits.length; i += 8) {
+        let byte = 0;
+        for (let b = 0; b < 8; b++) byte = (byte << 1) | bits[i + b];
+        dataCw.push(byte);
+      }
+
+      // Split into blocks & compute RS ECC
+      const baseLen = Math.floor(spec.data / spec.blocks);
+      const extra = spec.data % spec.blocks;
+      const dBlocks = [];
+      const eBlocks = [];
+      let offset = 0;
+      for (let b = 0; b < spec.blocks; b++) {
+        const len = baseLen + (b >= spec.blocks - extra ? 1 : 0);
+        const slice = dataCw.slice(offset, offset + len);
+        offset += len;
+        dBlocks.push(slice);
+        eBlocks.push(rsRemainder(slice, spec.ec));
+      }
+
+      const finalCw = [];
+      const maxD = baseLen + (extra > 0 ? 1 : 0);
+      for (let i = 0; i < maxD; i++) {
+        for (let b = 0; b < spec.blocks; b++) {
+          if (i < dBlocks[b].length) finalCw.push(dBlocks[b][i]);
+        }
+      }
+      for (let i = 0; i < spec.ec; i++) {
+        for (let b = 0; b < spec.blocks; b++) {
+          finalCw.push(eBlocks[b][i]);
+        }
+      }
+
+      // Matrix setup
+      const mod = Array.from({ length: size }, () => new Array(size).fill(null));
+      const isFunc = Array.from({ length: size }, () => new Array(size).fill(false));
+
+      function setFunc(r, c, v) {
+        if (r >= 0 && r < size && c >= 0 && c < size) {
+          mod[r][c] = v ? 1 : 0;
+          isFunc[r][c] = true;
+        }
+      }
+
+      function drawFinder(r, c) {
+        for (let dr = -1; dr <= 7; dr++) {
+          for (let dc = -1; dc <= 7; dc++) {
+            const on =
+              dr >= 0 && dr <= 6 && dc >= 0 && dc <= 6 &&
+              (dr === 0 || dr === 6 || dc === 0 || dc === 6 || (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4));
+            setFunc(r + dr, c + dc, on);
+          }
+        }
+      }
+
+      drawFinder(0, 0);
+      drawFinder(0, size - 7);
+      drawFinder(size - 7, 0);
+
+      // Alignment patterns
+      const centers = spec.align;
+      for (let i = 0; i < centers.length; i++) {
+        for (let j = 0; j < centers.length; j++) {
+          const r = centers[i], c = centers[j];
+          if (isFunc[r][c]) continue;
+          for (let dr = -2; dr <= 2; dr++) {
+            for (let dc = -2; dc <= 2; dc++) {
+              const on = Math.abs(dr) === 2 || Math.abs(dc) === 2 || (dr === 0 && dc === 0);
+              setFunc(r + dr, c + dc, on);
+            }
+          }
+        }
+      }
+
+      // Timing patterns & dark module
+      for (let i = 8; i < size - 8; i++) {
+        if (!isFunc[6][i]) setFunc(6, i, i % 2 === 0);
+        if (!isFunc[i][6]) setFunc(i, 6, i % 2 === 0);
+      }
+      setFunc(size - 8, 8, 1);
+
+      // Reserve format info
+      for (let i = 0; i < 9; i++) {
+        if (!isFunc[8][i]) setFunc(8, i, 0);
+        if (!isFunc[i][8]) setFunc(i, 8, 0);
+      }
+      for (let i = 0; i < 8; i++) {
+        setFunc(8, size - 1 - i, 0);
+        setFunc(size - 1 - i, 8, 0);
+      }
+
+      // Place data bits (mask 0: (r + c) % 2 === 0)
+      const bitStream = [];
+      finalCw.forEach((cw) => {
+        for (let i = 7; i >= 0; i--) bitStream.push((cw >>> i) & 1);
+      });
+
+      let bIdx = 0;
+      let up = true;
+      for (let right = size - 1; right >= 1; right -= 2) {
+        if (right === 6) right = 5;
+        for (let step = 0; step < size; step++) {
+          const r = up ? size - 1 - step : step;
+          for (let dx = 0; dx < 2; dx++) {
+            const c = right - dx;
+            if (!isFunc[r][c]) {
+              const bit = bIdx < bitStream.length ? bitStream[bIdx++] : 0;
+              const masked = ((r + c) % 2 === 0) ? (bit ^ 1) : bit;
+              mod[r][c] = masked;
+            }
+          }
+        }
+        up = !up;
+      }
+
+      // Format string for ECC-L (01) + Mask 0 (000) = 0x77c4
+      const fmt = 0x77c4;
+      for (let i = 0; i < 6; i++) setFunc(8, i, (fmt >>> (14 - i)) & 1);
+      setFunc(8, 7, (fmt >>> 8) & 1);
+      setFunc(8, 8, (fmt >>> 7) & 1);
+      setFunc(7, 8, (fmt >>> 6) & 1);
+      for (let i = 0; i < 6; i++) setFunc(5 - i, 8, (fmt >>> i) & 1);
+      for (let i = 0; i < 8; i++) setFunc(8, size - 1 - i, (fmt >>> i) & 1);
+      for (let i = 0; i < 7; i++) setFunc(size - 7 + i, 8, (fmt >>> (14 - i)) & 1);
+
+      const quiet = 2;
+      const dim = size + quiet * 2;
+      let rects = "";
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (mod[r][c] === 1) {
+            rects += `<rect x="${c + quiet}" y="${r + quiet}" width="1" height="1"/>`;
+          }
+        }
+      }
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${dim} ${dim}" shape-rendering="crispEdges"><rect width="${dim}" height="${dim}" fill="#ffffff"/><g fill="#0f172a">${rects}</g></svg>`;
+    }
+
+    return { encodeSVG };
+  })();
+
+  // QR Modal Controls
+  const shareFamilyBtn = document.getElementById("shareFamilyBtn");
+  const qrModal = document.getElementById("qrModal");
+  const closeQrModalBtn = document.getElementById("closeQrModalBtn");
+  const qrCodeContainer = document.getElementById("qrCodeContainer");
+  const qrUrlDisplay = document.getElementById("qrUrlDisplay");
+  const nativeShareBtn = document.getElementById("nativeShareBtn");
+  const qrShareFeedback = document.getElementById("qrShareFeedback");
+
+  function getPatientGuideUrl() {
+    try {
+      return new URL("./patient-guide.html", window.location.href).href;
+    } catch (_) {
+      return "./patient-guide.html";
+    }
+  }
+
+  if (shareFamilyBtn && qrModal) {
+    shareFamilyBtn.addEventListener("click", () => {
+      const url = getPatientGuideUrl();
+      qrCodeContainer.innerHTML = QR.encodeSVG(url);
+      qrUrlDisplay.textContent = url;
+      qrShareFeedback.textContent = "";
+      qrModal.classList.remove("hidden");
+    });
+
+    closeQrModalBtn.addEventListener("click", () => qrModal.classList.add("hidden"));
+    qrModal.addEventListener("click", (e) => {
+      if (e.target === qrModal) qrModal.classList.add("hidden");
+    });
+
+    nativeShareBtn.addEventListener("click", async () => {
+      const url = getPatientGuideUrl();
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Understanding Your Urine Test (UTI Guide)",
+            text: "Patient & family guide explaining when urine tests and antibiotics are needed for suspected UTIs:",
+            url
+          });
+          qrShareFeedback.textContent = "Shared successfully";
+          return;
+        } catch (_) {}
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+        qrShareFeedback.textContent = "Link copied to clipboard";
+      } catch (_) {
+        qrShareFeedback.textContent = "Copy the link shown above to share";
+      }
+    });
+  }
 })();
+
