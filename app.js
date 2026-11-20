@@ -808,6 +808,168 @@
     }
   }
 
+  function buildRequestDetails() {
+    const c = state.cohort;
+    const riskNote = state.resistanceRisk ? ", recurrent/resistance risk" : "";
+    const step3 = `Rx: [current/planned agent], Allergies: [NKDA/drug]${riskNote}`;
+
+    if (c === "fem_u65") {
+      const keyCount = [state.femDysuria, state.femNocturia, state.femCloudy].filter(Boolean).length;
+      if (state.femUpper) {
+        return {
+          needed: true,
+          text: `MSU: Loin/flank pain + fever ≥37.9°C/rigors [duration] | ?Acute pyelonephritis | ${step3}`
+        };
+      }
+      if (state.femDischarge || (keyCount >= 2 && !state.resistanceRisk)) {
+        return {
+          needed: false,
+          text: "Routine urine culture NOT indicated for this presentation (SIGN 160 / UKHSA DDT)."
+        };
+      }
+      if (keyCount >= 2 && state.resistanceRisk) {
+        const syms = [
+          state.femDysuria ? "dysuria" : "",
+          state.femNocturia ? "nocturia" : "",
+          state.femCloudy ? "cloudy urine" : ""
+        ].filter(Boolean).join("/");
+        return {
+          needed: true,
+          text: `MSU: New ${syms} [duration] | ?Complicated/recurrent lower UTI | ${step3}`
+        };
+      }
+      if (keyCount === 1) {
+        const sym = state.femDysuria ? "dysuria" : state.femNocturia ? "new nocturia" : "cloudy urine";
+        const dipPos = state.femLe === "pos" || state.femNitrite === "pos";
+        if (dipPos && state.resistanceRisk) {
+          return {
+            needed: true,
+            text: `MSU: New ${sym} [duration], dip LE ${state.femLe === "pos" ? "+" : "−"}/Nit ${state.femNitrite === "pos" ? "+" : "−"} | ?Resistant/recurrent LUTI | ${step3}`
+          };
+        }
+        return {
+          needed: false,
+          text: "Routine urine culture NOT indicated unless symptoms persist/worsen or resistance risk applies."
+        };
+      }
+      if (state.femOther && state.resistanceRisk) {
+        return {
+          needed: true,
+          text: `MSU: Frequency/urgency/suprapubic pain [duration] | ?Resistant/recurrent LUTI | ${step3}`
+        };
+      }
+      return {
+        needed: false,
+        text: "Select clinical findings above to generate suggested lab request details."
+      };
+    }
+
+    if (c === "preg") {
+      if (state.pregMode === "upper") {
+        return {
+          needed: true,
+          text: `URGENT MSU: Pregnancy [gestation], flank pain + fever/rigors [duration] | ?Antenatal pyelonephritis | ${step3}`
+        };
+      }
+      if (state.pregMode === "asb") {
+        return {
+          needed: true,
+          text: `MSU: Pregnancy booking/antenatal screen [gestation], asymptomatic | ?Antenatal ASB | ${step3}`
+        };
+      }
+      return {
+        needed: true,
+        text: `MSU: Pregnancy [gestation], dysuria/frequency/urgency [duration] | ?Antenatal LUTI | ${step3}`
+      };
+    }
+
+    if (c === "male_u65") {
+      if (state.maleProstatitis) {
+        return {
+          needed: true,
+          text: `URGENT MSU: Fever + painful voiding/perineal pain [duration] | ?Acute bacterial prostatitis | ${step3}`
+        };
+      }
+      if (state.maleUpper) {
+        return {
+          needed: true,
+          text: `URGENT MSU: Loin/flank pain + fever/rigors [duration] | ?Male acute pyelonephritis | ${step3}`
+        };
+      }
+      if (state.maleLower) {
+        return {
+          needed: true,
+          text: `MSU: New dysuria/frequency/urgency [duration] | ?Male LUTI | ${step3}`
+        };
+      }
+      if (state.maleSti) {
+        return {
+          needed: false,
+          text: "First-void urine for CT/NG NAAT/PCR (send MSU only if concurrent UTI symptoms)."
+        };
+      }
+      return {
+        needed: false,
+        text: "Select male clinical scenario above to generate suggested lab request details."
+      };
+    }
+
+    if (c === "older_65") {
+      if (state.oldUpper) {
+        return {
+          needed: true,
+          text: `URGENT MSU: ≥65y, fever/hypothermia/rigors/flank pain [duration] | ?Urosepsis / upper UTI | ${step3}`
+        };
+      }
+      if (state.oldDysuria || state.oldLocalCount.length >= 2) {
+        const syms = state.oldDysuria
+          ? "new dysuria"
+          : state.oldLocalCount.map((s) => s.toLowerCase()).join(", ");
+        return {
+          needed: true,
+          text: `MSU: ≥65y, ${syms} [duration] | ?Symptomatic LUTI | ${step3}`
+        };
+      }
+      return {
+        needed: false,
+        text: "DO NOT SEND CULTURE — Insufficient urinary criteria (complete PINCH ME screen & hydrate)."
+      };
+    }
+
+    if (c === "cauti") {
+      if (state.cautiUpper || state.cautiLocal) {
+        const cathSite = state.cautiOver7d ? "CSU (new catheter port)" : "CSU (catheter port)";
+        const symText = state.cautiUpper ? "flank pain + fever/rigors [duration]" : "new haematuria/suprapubic pain/fever [duration]";
+        const diffText = state.cautiUpper ? "?Upper CAUTI / urosepsis" : "?Symptomatic CAUTI";
+        return {
+          needed: true,
+          text: `${cathSite}: ${symText} | ${diffText} | ${step3}`
+        };
+      }
+      return {
+        needed: false,
+        text: "DO NOT SEND CULTURE — Asymptomatic catheter colonisation (do not dipstick or treat)."
+      };
+    }
+
+    if (c === "surgical") {
+      const specType = state.surgType === "nephrostomy" ? "Nephrostomy port urine" : "Ileal conduit stomal urine";
+      const diffText = state.surgType === "nephrostomy" ? "?Nephrostomy-associated pyelonephritis" : "?Conduit pyelonephritis / urosepsis";
+      if (state.surgSymp) {
+        return {
+          needed: true,
+          text: `URGENT ${specType}: Flank/stomal pain, fever/rigors, or haematuria [duration] | ${diffText} | ${step3}`
+        };
+      }
+      return {
+        needed: false,
+        text: "DO NOT SEND CULTURE — Asymptomatic conduit/nephrostomy colonisation."
+      };
+    }
+
+    return { needed: false, text: "" };
+  }
+
   function renderVerdict({ theme, severity, title, summary, dipRule, cultureRule, actions, sources, dipGrade, clinGrade }) {
     els.verdictCard.className = `verdict-card ${theme}`;
     els.verdictSeverity.textContent = severity;
@@ -826,16 +988,14 @@
       els.verdictActions.appendChild(li);
     });
 
-    const noteLines = [
-      `Adult UTI Diagnostic Triage | Cohort: ${COHORT_LABELS[state.cohort]}${state.resistanceRisk ? " | Resistance/Recurrence Risk: YES" : ""}`,
-      `• Assessment: ${title}`,
-      `• Dipstick Rule: ${dipRule}`,
-      `• Culture Rule: ${cultureRule}`,
-      actions.length ? `• Plan: ${actions.join(" ")}` : ""
-    ].filter(Boolean).join("\n");
-
-    els.verdictNotePreview.textContent = noteLines;
+    const req = buildRequestDetails();
+    const reqBox = document.getElementById("requestDetailsBox");
+    if (reqBox) {
+      reqBox.classList.remove("hidden");
+    }
+    els.verdictNotePreview.textContent = req.text;
     els.verdictNotePreview.classList.remove("hidden");
+    els.copyNoteBtn.disabled = !req.needed;
     els.copyFeedback.textContent = "";
   }
 

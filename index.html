@@ -135,9 +135,15 @@
         </div>
       </div>
 
-      <div id="verdictNotePreview" class="note-preview hidden"></div>
+      <div id="requestDetailsBox" class="request-box hidden">
+        <div class="request-box-header">
+          <strong>Suggested Clinical Details for Lab Request Form</strong>
+          <span class="req-hint">Site/Duration | ?Differential | Therapy/Allergies</span>
+        </div>
+        <div id="verdictNotePreview" class="note-preview"></div>
+      </div>
       <div class="verdict-footer">
-        <button type="button" id="copyNoteBtn" class="btn-primary">Copy Clinical Note</button>
+        <button type="button" id="copyNoteBtn" class="btn-primary">Copy Request Details</button>
         <button type="button" id="shareFamilyBtn" class="btn-secondary hidden">Share Family &amp; Carer Guide (QR)</button>
         <span id="copyFeedback" class="copy-feedback" role="status"></span>
       </div>

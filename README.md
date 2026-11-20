@@ -39,7 +39,7 @@ All diagnostic algorithms, dipstick gatekeeping rules, specimen collection stand
 ## Architecture & Information Governance
 
 - **Zero-Dependency Vanilla Stack:** Built purely with `index.html`, `styles.css`, `app.js`, `manifest.json`, and `sw.js`—no external frameworks, CDNs, or tracking scripts.
-- **Privacy by Design:** Executes 100% client-side in the browser. Zero patient-identifiable data (PID) is collected, transmitted, logged, or stored externally. The **Copy Clinical Note** feature writes strictly to the local device clipboard.
+- **Privacy by Design:** Executes 100% client-side in the browser. Zero patient-identifiable data (PID) is collected, transmitted, logged, or stored externally. The **Copy Request Details** feature generates concise, 3-point pipe-delimited clinical details for laboratory request forms (`Site & Duration | ?Working Differential | Therapy, Allergies & Risk`) and writes strictly to the local device clipboard.
 - **Offline Support:** Uses a Service Worker (`sw.js`) to cache all assets on first visit for uninterrupted offline clinical use.
 
 ---
