@@ -248,9 +248,9 @@
             </label>
           </div>
 
-          ${(state.oldDeliriumOnly || state.oldDarkSmellyOnly) ? `
+          ${state.oldDeliriumOnly ? `
           <div class="pinch-box">
-            <h3>Mandatory PINCH ME Delirium &amp; Deterioration Screen</h3>
+            <h3>Mandatory PINCH-ME Delirium Screen</h3>
             <p style="margin:0;font-size:0.82rem;"><strong>P</strong>ain &bull; <strong>I</strong>nfection (chest/skin/GI) &bull; <strong>N</strong>utrition &bull; <strong>C</strong>onstipation &bull; <strong>H</strong>ydration &bull; <strong>M</strong>edication changes &bull; <strong>E</strong>nvironment</p>
           </div>` : ""}
         </div>`;
@@ -693,18 +693,29 @@
         });
       }
       if (state.oldLocalCount.length === 1 || state.oldDeliriumOnly || state.oldDarkSmellyOnly) {
+        const hasDelirium = state.oldDeliriumOnly;
+        const actions = hasDelirium
+          ? [
+              "Complete the PINCH-ME screen (Pain, Infection, Nutrition, Constipation, Hydration, Medication, Environment).",
+              "Encourage oral fluid intake (hydration trial) and address reversible delirium triggers.",
+              "Monitor closely and reassess within 24 hours."
+            ]
+          : [
+              "Encourage oral fluid intake (hydration trial) — dark, cloudy, or strong-smelling urine alone usually reflects dehydration.",
+              "Assess for alternative non-urinary causes of symptoms and monitor closely over 24–48 hours."
+            ];
         return renderVerdict({
           theme: "verdict-green",
           severity: "DO NOT DIPSTICK • DO NOT CULTURE • DO NOT TREAT",
-          title: "Insufficient criteria for UTI: Execute PINCH ME screen, hydrate & observe",
-          summary: "Isolated delirium/confusion, dark/malodorous urine, or a single non-dysuria symptom does NOT justify UTI antibiotics or culture.",
+          title: hasDelirium
+            ? "Insufficient criteria for UTI: Execute PINCH-ME delirium screen, hydrate & observe"
+            : "Insufficient criteria for UTI: Hydrate, observe & explore non-UTI causes",
+          summary: hasDelirium
+            ? "New confusion or delirium without localised urinary signs or systemic sepsis does NOT justify UTI antibiotics or culture."
+            : "Dark/malodorous urine or a single non-dysuria urinary symptom does NOT justify UTI antibiotics or culture.",
           dipRule: "BANNED — Dipsticking leads to false-positive ASB treatment and C. difficile / AMR harm.",
           cultureRule: "DO NOT SEND CULTURE unless new dysuria, ≥2 localised signs, or systemic sepsis indicators develop.",
-          actions: [
-            "Complete the PINCH ME screen (Pain, Infection, Nutrition, Constipation, Hydration, Medication, Environment).",
-            "Encourage oral fluid intake (hydration trial) and address reversible triggers.",
-            "Monitor closely and reassess within 24 hours."
-          ],
+          actions,
           sources: "UKHSA DDT Adults 65+ v4.0 • SIGN 160 • NICE QS90",
           dipGrade: "UKHSA Grade A (OCEBM Level 1a) / SIGN Level 1++ [Strong R]",
           clinGrade: "UKHSA Grade A / SIGN Level 1++ [Strong R]"
@@ -932,7 +943,9 @@
       }
       return {
         needed: false,
-        text: "DO NOT SEND CULTURE — Insufficient urinary criteria (complete PINCH ME screen & hydrate)."
+        text: state.oldDeliriumOnly
+          ? "DO NOT SEND CULTURE — Insufficient urinary criteria (complete PINCH-ME delirium screen & hydrate)."
+          : "DO NOT SEND CULTURE — Insufficient urinary criteria (encourage hydration & observe)."
       };
     }
 
